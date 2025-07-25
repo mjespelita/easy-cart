@@ -134,7 +134,7 @@
                                 <p><strong>Done At:</strong><br>
                                     {{ !empty($item->done_at) ? Smark\Smark\Dater::humanReadableDateWithDayAndTime($item->done_at) : '---' }}
                                 </p>
-                                <p><strong>Counter Staff:</strong> {{ $item->users->name ?? 'No Data' }}</p>
+                                <p><strong>Ordered By:</strong> {{ $item->users->name ?? 'No Data' }} - {{ ucfirst($item->users->role) ?? "no data" }}</p>
                             </div>
                             <div class="card-footer d-flex">
                                 <a href="{{ route('orders.show', $item->id) }}" class="p-1 text-success"><i class="fas fa-eye"></i></a>

@@ -341,8 +341,8 @@
                      </td>
                   </tr>
                   <tr>
-                     <th>Counter Staff</th>
-                     <td>{{ $item->users->name ?? "no data" }}</td>
+                     <th>Staff</th>
+                     <td>{{ $item->users->name ?? "no data" }} - {{ ucfirst($item->users->role) ?? "no data" }}</td>
                   </tr>
                   <tr>
                      <th>Created At</th>

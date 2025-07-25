@@ -104,7 +104,7 @@
                     <div class="mb-4 col-md-6 col-lg-4">
                         <div class="shadow-sm card border-success">
                             <div class="text-white card-header d-flex justify-content-between align-items-center" style="background: #1B1B1B;">
-                                <strong>Table: {{ $item->table_number }}</strong>
+                                <strong>Table: {{ $item->table_number }} from {{ $item->users->name ?? "no data" }} - {{ ucfirst($item->users->role) ?? "no data" }}</strong>
                                 <input type="checkbox" class="form-check-input check" data-id="{{ $item->id }}">
                             </div>
                             <div class="card-body">

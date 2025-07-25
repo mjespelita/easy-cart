@@ -45,6 +45,12 @@ use Smark\Smark\Dater;
 
 // end of import
 
+use App\Http\Controllers\UsersController;
+use App\Models\Users;
+
+// end of import
+
+
 
 
 Route::get('/', function () {
@@ -642,6 +648,78 @@ Route::middleware([
 
         // Return the view with discounts and the selected date range
         return view('discounts.discounts', compact('discounts', 'from', 'to'));
+    });
+
+    // end...
+
+    Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+    Route::get('/create-users', [UsersController::class, 'create'])->name('users.create');
+    Route::get('/edit-users/{usersId}', [UsersController::class, 'edit'])->name('users.edit');
+    Route::get('/show-users/{usersId}', [UsersController::class, 'show'])->name('users.show');
+    Route::get('/delete-users/{usersId}', [UsersController::class, 'delete'])->name('users.delete');
+    Route::get('/destroy-users/{usersId}', [UsersController::class, 'destroy'])->name('users.destroy');
+    Route::post('/store-users', [UsersController::class, 'store'])->name('users.store');
+    Route::post('/update-users/{usersId}', [UsersController::class, 'update'])->name('users.update');
+    Route::post('/users-delete-all-bulk-data', [UsersController::class, 'bulkDelete']);
+    Route::post('/users-move-to-trash-all-bulk-data', [UsersController::class, 'bulkMoveToTrash']);
+    Route::post('/users-restore-all-bulk-data', [UsersController::class, 'bulkRestore']);
+    Route::get('/trash-users', [UsersController::class, 'trash']);
+    Route::get('/restore-users/{usersId}', [UsersController::class, 'restore'])->name('users.restore');
+
+    // Users Search
+    Route::get('/users-search', function (Request $request) {
+        $search = $request->get('search');
+
+        // Perform the search logic
+        $users = Users::when($search, function ($query) use ($search) {
+            return $query->where('name', 'like', "%$search%");
+        })->paginate(10);
+
+        return view('users.users', compact('users', 'search'));
+    });
+
+    // Users Paginate
+    Route::get('/users-paginate', function (Request $request) {
+        // Retrieve the 'paginate' parameter from the URL (e.g., ?paginate=10)
+        $paginate = $request->input('paginate', 10); // Default to 10 if no paginate value is provided
+    
+        // Paginate the users based on the 'paginate' value
+        $users = Users::paginate($paginate); // Paginate with the specified number of items per page
+    
+        // Return the view with the paginated users
+        return view('users.users', compact('users'));
+    });
+
+    // Users Filter
+    Route::get('/users-filter', function (Request $request) {
+        // Retrieve 'from' and 'to' dates from the URL
+        $from = $request->input('from');
+        $to = $request->input('to');
+    
+        // Retrieve 'from' and 'to' dates from the URL
+        $from = $request->input('from');
+        $to = $request->input('to');
+    
+        // Default query for users
+        $query = Users::query();
+    
+        // Convert dates to Carbon instances for better comparison
+        $fromDate = $from ? Carbon::parse($from)->startOfDay() : null;
+        $toDate = $to ? Carbon::parse($to)->endOfDay() : null;
+    
+        // Check if both 'from' and 'to' dates are provided
+        if ($fromDate && $toDate) {
+            // Ensure correct date filtering with full day range
+            $users = $query->whereBetween('created_at', [$fromDate, $toDate])
+                           ->orderBy('created_at', 'desc')
+                           ->paginate(10);
+        } else {
+            // If 'from' or 'to' are missing, show all users without filtering
+            $users = $query->paginate(10);
+        }
+    
+        // Return the view with users and the selected date range
+        return view('users.users', compact('users', 'from', 'to'));
     });
 
     // end...

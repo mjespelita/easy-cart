@@ -57,6 +57,9 @@
             </a> --}}
 
             @if (Auth::user()->role === 'admin')
+                <a href="{{ url('users') }}" class="{{ request()->is('users', 'create-users', 'trash-users', 'show-users/*', 'edit-users/*', 'delete-users/*', 'discounts-search*') ? 'active' : '' }}">
+                    <i class="fas fa-users"></i> User Accounts
+                </a>
                 <a href="{{ url('discounts') }}" class="{{ request()->is('discounts', 'create-discounts', 'trash-discounts', 'show-discounts/*', 'edit-discounts/*', 'delete-discounts/*', 'discounts-search*') ? 'active' : '' }}">
                     <i class="fas fa-percentage"></i> Discount List
                 </a>

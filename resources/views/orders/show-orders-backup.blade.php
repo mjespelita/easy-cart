@@ -204,7 +204,7 @@
                             </tr>
 
                             <tr>
-                                <th>Counter Staff</th>
+                                <th>Ordered By</th>
                                 <td>{{ $item->users->name ?? "no data" }}</td>
                             </tr>
 

@@ -24,17 +24,17 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        User::factory()->create([
-            'name' => 'Counter Staff',
-            'email' => 'counter@system.com',
-            'role' => 'counter',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Counter Staff',
+        //     'email' => 'counter@system.com',
+        //     'role' => 'counter',
+        // ]);
 
-        User::factory()->create([
-            'name' => 'Kitchen Staff',
-            'email' => 'kitchen@example.com',
-            'role' => 'counter',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Kitchen Staff',
+        //     'email' => 'kitchen@example.com',
+        //     'role' => 'counter',
+        // ]);
 
         // Discounts::create([
         //     'users_id' => 1,

@@ -9,13 +9,24 @@
             <form action='{{ route('products.store') }}' method='POST'>
                 @csrf
 
+        @php
+            use App\Models\Products;
+
+            $lastProduct = Products::orderByDesc('id')->first();
+            $lastId = $lastProduct ? $lastProduct->product_id : 'MENU_0000';
+
+            preg_match('/MENU_(\d+)/', $lastId, $matches);
+            $nextNumber = isset($matches[1]) ? intval($matches[1]) + 1 : 1;
+            $nextProductId = 'MENU_' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+        @endphp
+
         <div class='form-group'>
-            <label for='name'>Product ID</label>
-            <input type='text' class='form-control' id='product_id' name='product_id' required>
+            {{-- <label for='product_id'>Product ID</label> --}}
+            <input type='text' class='form-control' id='product_id' name='product_id' required value="{{ $nextProductId }}" readonly hidden>
         </div>
 
         <div class='form-group'>
-            <label for='name'>Name</label>
+            <label for='name'>Menu Name</label>
             <input type='text' class='form-control' id='name' name='name' required>
         </div>
 
@@ -25,7 +36,7 @@
         </div>
 
         <!-- Real-time price preview -->
-        <div class="form-group p-4">
+        <div class="p-4 form-group">
             <h1 id="formatted-price" style="font-weight: bold; font-size: 1.2rem;">₱0.00</h1>
         </div>
 
@@ -35,7 +46,7 @@
             <input type="number" step="any" class="form-control" id="price" name="price" required>
         </div>
 
-                <button type='submit' class='btn btn-primary mt-3'>Create</button>
+                <button type='submit' class='mt-3 btn btn-primary'>Create</button>
             </form>
         </div>
     </div>

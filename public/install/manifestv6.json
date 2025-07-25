@@ -1,17 +1,17 @@
 {
     "id": "/",
-    "short_name": "Wow Inasal",
-    "name": "Wow Inasal Kitchen-Counter Queuing System",
-    "description": "Wow Inasal Kitchen-Counter Queuing System",
+    "short_name": "Easy Cart",
+    "name": "Easy Cart Kitchen-Counter Queuing System",
+    "description": "Easy Cart Kitchen-Counter Queuing System",
     "icons": [
         {
-            "src": "./logo/logo-95x95.png",
-            "type": "image/png",
+            "src": "./logo/logo-95x95.jpg",
+            "type": "image/jpg",
             "sizes": "95x95"
         },
         {
-            "src": "./logo/logo-192x192.png",
-            "type": "image/png",
+            "src": "./logo/logo-192x192.jpg",
+            "type": "image/jpg",
             "sizes": "192x192"
         }
     ],

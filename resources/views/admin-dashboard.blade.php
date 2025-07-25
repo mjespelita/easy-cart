@@ -10,7 +10,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Products</h5>
-                    <h1>23</h1>
+                    <h1>{{ App\Models\Products::count() }}</h1>
                 </div>
             </div>
         </div>

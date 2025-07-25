@@ -15,7 +15,7 @@
     <div class='card'>
         <div class='card-body'>
             <div class='row'>
-                <div class='col-lg-4 col-md-4 col-sm-12 mt-2'>
+                <div class='mt-2 col-lg-4 col-md-4 col-sm-12'>
                     <div class='row'>
                         <div class='col-4'>
                             <button type='button' class='btn btn-outline-secondary dropdown-toggle' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
@@ -43,7 +43,7 @@
                         </div>
                     </div>
                 </div>
-                <div class='col-lg-4 col-md-4 col-sm-12 mt-2'>
+                <div class='mt-2 col-lg-4 col-md-4 col-sm-12'>
                     <form action='{{ url('/orders-filter') }}' method='get'>
                         <div class='input-group'>
                             <input type='date' class='form-control' id='from' name='from' required>
@@ -56,7 +56,7 @@
                         @csrf
                     </form>
                 </div>
-                <div class='col-lg-4 col-md-4 col-sm-12 mt-2'>
+                <div class='mt-2 col-lg-4 col-md-4 col-sm-12'>
                     <!-- Search Form -->
                     <form action='{{ url('/orders-search') }}' method='GET'>
                         <div class='input-group'>
@@ -69,11 +69,11 @@
                 </div>
             </div>
 
-            <div class="row mt-3">
+            <div class="mt-3 row">
                 @forelse($orders as $item)
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card shadow-sm border-success">
-                            <div class="card-header d-flex justify-content-between align-items-center text-white" style="background: #1A3600;">
+                    <div class="mb-4 col-md-6 col-lg-4">
+                        <div class="shadow-sm card border-success">
+                            <div class="text-white card-header d-flex justify-content-between align-items-center" style="background: #1B1B1B;">
                                 <strong>Table: {{ $item->table_number }}</strong>
                                 <input type="checkbox" class="form-check-input check" data-id="{{ $item->id }}">
                             </div>
@@ -85,7 +85,18 @@
                                         <strong>Preparing Time:</strong>
                                         <div class="timer-box" id="live-timer-{{ $item->id }}"
                                             data-updated="{{ $item->sent_to_kitchen_at }}"
-                                            style="background-color: #1A3600; color: #b4ff7d; font-family: 'Courier New', monospace; font-size: 18px; padding: 8px 14px; border-radius: 6px; display: inline-block; min-width: 120px; text-align: center; box-shadow: 0 0 8px #b4ff7d;">
+                                            style="
+                                                background-color: #000000;
+                                                color: #D49837;
+                                                font-family: 'Courier New', monospace;
+                                                font-size: 18px;
+                                                padding: 8px 14px;
+                                                border-radius: 6px;
+                                                display: inline-block;
+                                                min-width: 120px;
+                                                text-align: center;
+                                                box-shadow: 0 0 8px #D49837;
+                                            ">
                                         </div>
                                     </div>
                                 @elseif ($item->status === 'done')
@@ -94,7 +105,18 @@
                                         <div class="timer-box" id="duration-timer-{{ $item->id }}"
                                             data-start="{{ $item->sent_to_kitchen_at }}"
                                             data-end="{{ $item->done_at }}"
-                                            style="background-color: #1A3600; color: #b4ff7d; font-family: 'Courier New', monospace; font-size: 18px; padding: 8px 14px; border-radius: 6px; display: inline-block; min-width: 120px; text-align: center; box-shadow: 0 0 8px #b4ff7d;">
+                                            style="
+                                                background-color: #000000;
+                                                color: #C49C74;
+                                                font-family: 'Courier New', monospace;
+                                                font-size: 18px;
+                                                padding: 8px 14px;
+                                                border-radius: 6px;
+                                                display: inline-block;
+                                                min-width: 120px;
+                                                text-align: center;
+                                                box-shadow: 0 0 8px #C49C74;
+                                            ">
                                         </div>
                                     </div>
                                 @endif
@@ -125,7 +147,7 @@
                     </div>
                 @empty
                     <div class="col-12">
-                        <div class="alert alert-warning text-center">No Orders Found.</div>
+                        <div class="text-center alert alert-warning">No Orders Found.</div>
                     </div>
                 @endforelse
             </div>

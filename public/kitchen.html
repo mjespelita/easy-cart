@@ -6,64 +6,118 @@
   <title>Orders Grid</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: #0a0f0a;
-      color: #f2ffe6;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+  body {
+    background-color: #000000;
+    color: #C49C74;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
 
-    .order-card {
-      background: #131F0E;
-      border: 2px solid #7AC500;
-      box-shadow: 0 0 15px #7AC50080;
-      border-radius: 13px;
-      padding: 1.2rem;
-      margin-bottom: 1.5rem;
-      transition: 0.3s ease-in-out;
-    }
+  .order-card {
+    background: #0f0f0f;
+    border: 2px solid #C49C74;
+    box-shadow: 0 0 15px #C49C7480;
+    border-radius: 13px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    transition: 0.3s ease-in-out;
+  }
 
-    .order-card:hover {
-      box-shadow: 0 0 25px #7AC500;
-    }
+  .order-card:hover {
+    box-shadow: 0 0 25px #C49C74;
+  }
 
+  .order-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #C49C74;
+    margin-bottom: 1rem;
+  }
+
+  .item-box {
+    background: #121212;
+    border-left: 5px solid #C49C74;
+    padding: 0.6rem 1rem;
+    margin-bottom: 0.6rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px #C49C7466;
+    color: #f0e9dc;
+  }
+
+  .item-box.urgent {
+    border-left-color: #DC090D;
+    box-shadow: 0 0 6px #DC090D55;
+    color: #ffeaea;
+  }
+
+  h1.page-title {
+    color: #C49C74;
+    text-shadow: 0 0 10px #C49C7488;
+    margin-bottom: 2rem;
+  }
+
+  .table {
+    color: #e8e8e8;
+  }
+
+  .table thead th {
+    background-color: #1a1a1a;
+    color: #C49C74;
+    border-bottom: 1px solid #C49C74;
+  }
+
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #111111;
+  }
+
+  .table-striped tbody tr:nth-of-type(even) {
+    background-color: #1a1a1a;
+  }
+
+  .table td,
+  .table th {
+    border-color: #2a2a2a;
+  }
+
+  .table-active {
+    background-color: #1a1a1a !important;
+    color: #C49C74;
+  }
+
+  .table-success {
+    background-color: #1c1c1c !important;
+    color: #C49C74;
+  }
+
+  .table-danger {
+    background-color: #330000 !important;
+    color: #ffcccc;
+  }
+
+  .mark-as-done-api {
+    background-color: #C49C74;
+    color: #000000;
+    font-size: 11px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+  }
+
+  .mark-as-done-api:hover {
+    background-color: #a8865f;
+    color: #fff;
+  }
+
+  @media (max-width: 767px) {
     .order-title {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #7AC500;
-      margin-bottom: 1rem;
+      text-align: center;
     }
-
-    .item-box {
-      background: #1D2C13;
-      border-left: 5px solid #FBDF0A;
-      padding: 0.6rem 1rem;
-      margin-bottom: 0.6rem;
-      border-radius: 6px;
-      box-shadow: 0 0 6px #FBDF0A55;
-      color: #f0f5dc;
-    }
-
-    .item-box.urgent {
-      border-left-color: #DC090D;
-      box-shadow: 0 0 6px #DC090D55;
-      color: #ffeaea;
-    }
-
-    h1.page-title {
-      color: #FBDF0A;
-      text-shadow: 0 0 10px #FBDF0A88;
-      margin-bottom: 2rem;
-    }
-
-    @media (max-width: 767px) {
-      .order-title {
-        text-align: center;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <div class="container-fluid py-3">
+  <div class="py-3 container-fluid">
     <h1 class="text-center page-title">Kitchen Orders Board</h1>
 
     <div class="row g-3 orders">
@@ -88,13 +142,13 @@
             $('.orders').html('');
             res.forEach(order => {
                 let itemsHTML = `
-                    <table class="table table-sm table-striped mb-0">
+                    <table class="table mb-0 table-sm table-striped">
                         <thead class="table-light">
                             <tr>
                                 <th>Qty</th>
                                 <th>Code</th>
                                 <th>Product</th>
-                                <th>Total</th>
+                                <th>Price</th>
                                 <th>Subtotal</th>
                             </tr>
                         </thead>
@@ -189,9 +243,9 @@
                 setTimeout(() => diffTimer(order.sent_to_kitchen_at, timerId), 100); // slight delay to ensure DOM element exists
 
                 $('.orders').prepend(`
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="order-card p-3 shadow-sm rounded">
-                            <div class="order-title fw-bold mb-2">Table #${order.table_number}</div>
+                    <div class="mb-4 col-md-6 col-lg-4">
+                        <div class="p-3 rounded shadow-sm order-card">
+                            <div class="mb-2 order-title fw-bold">Table #${order.table_number}</div>
                             ${itemsHTML}
                         </div>
                     </div>

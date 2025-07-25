@@ -15,14 +15,14 @@
         <!-- FontAwesome for icons -->
         <link href='{{ url('assets/font-awesome/css/all.min.css') }}' rel='stylesheet'>
         <link rel='stylesheet' href='{{ url('assets/custom/style.css') }}'>
-        <link rel='icon' href='{{ url('assets/logo.png') }}'>
+        <link rel='icon' href='{{ url('assets/easy-cart-logo.jpg') }}'>
     </head>
     <body class='font-sans antialiased'>
 
         <!-- Sidebar for Desktop View -->
         <div class='sidebar' id='mobileSidebar'>
             <div class='logo'>
-                <img src='{{ url('assets/logo.png') }}' alt='' width='100%'>
+                <img src='{{ url('assets/easy-cart-logo.jpg') }}' alt='' width='50%'>
             </div>
             <a href="{{ url('dashboard') }}" class="{{ request()->is('dashboard') ? 'active' : '' }}">
                 <i class="fas fa-tachometer-alt"></i> Dashboard
@@ -33,15 +33,15 @@
             </a> --}}
 
             <a href="{{ url('orders') }}" class="{{ request()->is('orders', 'create-orders', 'trash-orders', 'show-orders/*', 'edit-orders/*', 'delete-orders/*', 'orders-search*') ? 'active' : '' }}">
-                <i class="fas fa-receipt"></i> <span class="text-warning">{{ App\Models\Orders::count() }}</span> All Orders
+                <i class="fas fa-receipt"></i> <span class="text-danger fw-bold">{{ App\Models\Orders::count() }}</span> All Orders
             </a>
 
             <a href="{{ url('preparing-orders') }}" class="{{ request()->is('preparing-orders', 'create-preparing-orders', 'trash-preparing-orders', 'show-preparing-orders/*', 'edit-preparing-orders/*', 'delete-preparing-orders/*', 'preparing-orders-search*') ? 'active' : '' }}">
-                <i class="fas fa-recycle"></i> <span class="text-warning">{{ App\Models\Orders::where('status', 'preparing')->count() }}</span> Preparing Orders
+                <i class="fas fa-recycle"></i> <span class="text-danger fw-bold">{{ App\Models\Orders::where('status', 'preparing')->count() }}</span> Preparing Orders
             </a>
 
             <a href="{{ url('done-orders') }}" class="{{ request()->is('done-orders', 'create-done-orders', 'trash-done-orders', 'show-done-orders/*', 'edit-done-orders/*', 'delete-done-orders/*', 'done-orders-search*') ? 'active' : '' }}">
-                <i class="fas fa-check"></i> <span class="text-warning">{{ App\Models\Orders::where('status', 'done')->count() }}</span> Done Orders
+                <i class="fas fa-check"></i> <span class="text-danger fw-bold">{{ App\Models\Orders::where('status', 'done')->count() }}</span> Done Orders
             </a>
 
             <a href="{{ url('products') }}" class="{{ request()->is('products', 'create-products', 'trash-products', 'show-products/*', 'edit-products/*', 'delete-products/*', 'products-search*') ? 'active' : '' }}">

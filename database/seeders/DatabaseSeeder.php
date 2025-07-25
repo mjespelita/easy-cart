@@ -19,32 +19,38 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Administrator',
+            'email' => 'admin@system.com',
             'role' => 'admin',
         ]);
 
         User::factory()->create([
             'name' => 'Counter Staff',
-            'email' => 'counter@example.com',
+            'email' => 'counter@system.com',
             'role' => 'counter',
         ]);
 
-        Discounts::create([
-            'users_id' => 1,
-            'name' => 'Senior Citizen',
-            'discount' => 40,
+        User::factory()->create([
+            'name' => 'Kitchen Staff',
+            'email' => 'kitchen@example.com',
+            'role' => 'counter',
         ]);
-        Discounts::create([
-            'users_id' => 1,
-            'name' => 'Student',
-            'discount' => 30,
-        ]);
-        Discounts::create([
-            'users_id' => 1,
-            'name' => 'PWDs',
-            'discount' => 10,
-        ]);
+
+        // Discounts::create([
+        //     'users_id' => 1,
+        //     'name' => 'Senior Citizen',
+        //     'discount' => 40,
+        // ]);
+        // Discounts::create([
+        //     'users_id' => 1,
+        //     'name' => 'Student',
+        //     'discount' => 30,
+        // ]);
+        // Discounts::create([
+        //     'users_id' => 1,
+        //     'name' => 'PWDs',
+        //     'discount' => 10,
+        // ]);
 
         // $names = [
         //     'Cheeseburger', 'Double Cheeseburger', 'Spaghetti', 'Iced Tea', 'Fries', 'Burger Steak', 'Hotdog Sandwich',

@@ -23,21 +23,21 @@
         <input type='hidden' name='orders_id' value="{{ $item->id }}">
         <input type='hidden' name='orders_users_id' value="{{ $item->users->id ?? "0" }}">
 
-        <div class='form-group mb-2'>
+        <div class='mb-2 form-group'>
             <label>Table Number</label>
             <input type='text' class='form-control' name='table_number' value="{{ $item->table_number }}" required>
         </div>
 
         {{-- Product Selection Boxes --}}
-        <div class="row mb-3">
+        <div class="mb-3 row">
             @foreach (App\Models\Products::all() as $product)
-                <div class="col-md-3 mb-2">
+                <div class="mb-2 col-md-3">
                     <div class="card product-box"
                         data-id="{{ $product->id }}"
                         data-name="{{ $product->name }}"
                         data-price="{{ $product->price }}"
                         style="cursor: pointer; border: 2px solid #ccc;">
-                        <div class="card-body text-center">
+                        <div class="text-center card-body">
                             <h5>{{ $product->name }}</h5>
                             <p>₱{{ number_format($product->price, 2) }}</p>
                         </div>
@@ -53,7 +53,7 @@
             <strong>Total: ₱<span id="total-price">0.00</span></strong>
         </div>
 
-        <button type='submit' class='btn btn-primary mt-3'>Send to Kitchen</button>
+        <button type='submit' class='mt-3 btn btn-primary'>Send to Kitchen</button>
     </form>
 @endif
 
@@ -67,8 +67,8 @@
                                         id="live-timer"
                                         data-updated="{{ $item->sent_to_kitchen_at }}"
                                         style="
-                                            background-color: #1A3600;
-                                            color: #b4ff7d;
+                                            background-color: #000000;
+                                            color: #C49C74;
                                             font-family: 'Courier New', monospace;
                                             font-size: 24px;
                                             padding: 10px 20px;
@@ -77,7 +77,7 @@
                                             letter-spacing: 2px;
                                             min-width: 120px;
                                             text-align: center;
-                                            box-shadow: 0 0 10px #b4ff7d;
+                                            box-shadow: 0 0 10px #C49C74;
                                         "
                                     ></div>
                         </div>
@@ -125,8 +125,8 @@
                                 data-start="{{ $item->sent_to_kitchen_at }}"
                                 data-end="{{ $item->done_at }}"
                                 style="
-                                    background-color: #1A3600;
-                                    color: #b4ff7d;
+                                    background-color: #000000;
+                                    color: #C49C74;
                                     font-family: 'Courier New', monospace;
                                     font-size: 24px;
                                     padding: 10px 20px;
@@ -135,7 +135,7 @@
                                     letter-spacing: 2px;
                                     min-width: 120px;
                                     text-align: center;
-                                    box-shadow: 0 0 10px #b4ff7d;
+                                    box-shadow: 0 0 10px #C49C74;
                                 "
                             ></div>
                         </div>

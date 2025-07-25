@@ -1,11 +1,9 @@
 :root {
-    --light-green: #7DC501;
-    --dark-green: #1B3800;
+    --primary-color: #000000;     /* Black as primary */
+    --accent-color: #C49C74;      /* Tan/Gold as accent */
     --red: #C7000C;
     --yellow: #FF9C07;
 
-    --primary-color: var(--dark-green);
-    --accent-color: var(--light-green);
     --text-light: #e3e3e3;
     --bg-light: #ffffff;
     --bg-dark: #e3e3e3;
@@ -20,23 +18,24 @@ body {
     font-family: "Poppins";
     src: url("https://db.onlinewebfonts.com/t/2f86dc938a55788d3416b876b43a116a.eot");
     src: url("https://db.onlinewebfonts.com/t/2f86dc938a55788d3416b876b43a116a.eot?#iefix")format("embedded-opentype"),
-    url("https://db.onlinewebfonts.com/t/2f86dc938a55788d3416b876b43a116a.woff2")format("woff2"),
-    url("https://db.onlinewebfonts.com/t/2f86dc938a55788d3416b876b43a116a.woff")format("woff"),
-    url("https://db.onlinewebfonts.com/t/2f86dc938a55788d3416b876b43a116a.ttf")format("truetype"),
-    url("https://db.onlinewebfonts.com/t/2f86dc938a55788d3416b876b43a116a.svg#Poppins")format("svg");
+         url("https://db.onlinewebfonts.com/t/2f86dc938a55788d3416b876b43a116a.woff2")format("woff2"),
+         url("https://db.onlinewebfonts.com/t/2f86dc938a55788d3416b876b43a116a.woff")format("woff"),
+         url("https://db.onlinewebfonts.com/t/2f86dc938a55788d3416b876b43a116a.ttf")format("truetype"),
+         url("https://db.onlinewebfonts.com/t/2f86dc938a55788d3416b876b43a116a.svg#Poppins")format("svg");
 }
 
-h1,h2,h3,h4,h5,h6,p,a,span,td,label,input,th,li{
+h1,h2,h3,h4,h5,h6,p,a,span,td,label,input,th,li {
     font-family: Poppins !important;
 }
 
+/* Buttons */
 .btn-success, .btn-info, .btn-primary {
     background: var(--primary-color) !important;
     border: none;
+    color: var(--accent-color) !important;
 }
 
-/* accent */
-
+/* Card styling */
 .card {
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -45,39 +44,15 @@ h1,h2,h3,h4,h5,h6,p,a,span,td,label,input,th,li{
     border: var(--primary-color) 1px solid;
 }
 
-#mobileSidebar .active {
-    background-color: var(--primary-color) !important;
-}
-
-.navbar {
-    background-color: var(--dark-green);
-}
-
-.active > .page-link, .page-link.active {
-    z-index: 3;
-    color: var(--text-light);
-    background-color: var(--primary-color);
-    border-color: var(--dark-green);
-}
-
-.page-link {
-    color: var(--dark-green);
-}
-
-/* end accent */
-
-#mobileSidebar {
-    z-index: 1;
-}
-
+/* Sidebar */
 .sidebar {
     height: 100vh;
     position: fixed;
     top: 0;
     left: 0;
     width: 240px;
-    background: linear-gradient(var(--primary-color), black);
-    color: var(--text-light);
+    background: linear-gradient(var(--primary-color), #222);
+    color: var(--accent-color);
     transition: all 0.3s;
     padding-top: 60px;
     overflow-x: scroll;
@@ -88,7 +63,7 @@ h1,h2,h3,h4,h5,h6,p,a,span,td,label,input,th,li{
 }
 
 .sidebar a {
-    color: var(--text-light);
+    color: var(--accent-color);
     text-decoration: none;
     padding: 15px 20px;
     display: block;
@@ -97,7 +72,8 @@ h1,h2,h3,h4,h5,h6,p,a,span,td,label,input,th,li{
 }
 
 .sidebar a:hover {
-    background-color: var(--primary-color);
+    background-color: var(--accent-color);
+    color: var(--primary-color) !important;
 }
 
 .sidebar a i {
@@ -115,28 +91,37 @@ h1,h2,h3,h4,h5,h6,p,a,span,td,label,input,th,li{
     width: 50px;
 }
 
-.content {
-    margin-left: 240px;
-    padding: 20px;
-    transition: margin-left 0.3s;
+/* Navbar */
+.navbar {
+    background-color: var(--primary-color);
 }
 
-.navbar .navbar-brand {
-    color: var(--text-light);
+.navbar .navbar-brand,
+.navbar-nav .nav-link {
+    color: var(--accent-color);
 }
 
 .navbar .navbar-toggler {
-    border-color: var(--text-light);
+    border-color: var(--accent-color);
 }
 
 .navbar .navbar-toggler-icon {
-    background-color: var(--text-light);
+    background-color: var(--accent-color);
 }
 
-.navbar-nav .nav-link {
-    color: var(--text-light);
+/* Pagination */
+.active > .page-link, .page-link.active {
+    z-index: 3;
+    color: var(--primary-color);
+    background-color: var(--accent-color);
+    border-color: var(--primary-color);
 }
 
+.page-link {
+    color: var(--primary-color);
+}
+
+/* Card body */
 .card .card-body {
     padding: 25px;
 }
@@ -146,10 +131,24 @@ h1,h2,h3,h4,h5,h6,p,a,span,td,label,input,th,li{
     font-weight: 600;
 }
 
-/* .table>:not(caption)>*>* {
-    border: none !important;
-} */
+/* Mobile sidebar */
+#mobileSidebar {
+    z-index: 1;
+}
 
+#mobileSidebar .active {
+    background-color: var(--accent-color) !important;
+    color: var(--primary-color) !important;
+}
+
+/* Content */
+.content {
+    margin-left: 240px;
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
     .sidebar {
         width: 250px;
@@ -165,16 +164,8 @@ h1,h2,h3,h4,h5,h6,p,a,span,td,label,input,th,li{
         margin-left: 0;
     }
 
-    .navbar .navbar-toggler {
-        border-color: var(--text-light);
-    }
-
-    .navbar .navbar-toggler-icon {
-        background-color: var(--text-light);
-    }
-
     .sidebar-mobile a {
-        color: var(--text-light);
+        color: var(--accent-color);
         text-decoration: none;
         padding: 15px;
         display: block;
@@ -184,7 +175,7 @@ h1,h2,h3,h4,h5,h6,p,a,span,td,label,input,th,li{
         display: block;
     }
 
-    /* 👇 Smaller font sizes for all common elements */
+    /* Smaller fonts */
     h1 { font-size: 1.2rem; }
     h2 { font-size: 1.1rem; }
     h3 { font-size: 1rem; }
@@ -217,4 +208,3 @@ h1,h2,h3,h4,h5,h6,p,a,span,td,label,input,th,li{
         padding: 6px 10px;
     }
 }
-

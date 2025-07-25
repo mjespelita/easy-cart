@@ -1,1 +1,1 @@
-<img src="{{ url('assets/logo-name.png') }}" alt="">
+<img src="{{ url('assets/easy-cart-logo.jpg') }}" alt="">

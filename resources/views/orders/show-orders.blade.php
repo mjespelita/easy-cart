@@ -15,12 +15,13 @@
     }
 
    .selected-item {
-        background: #f4fff1; /* light green tint */
-        border: 2px solid #cce5cc;
+        background: #FFEAD5; /* brand background */
+        border: 2px solid #D49837; /* accent border */
         border-radius: 10px;
         padding: 12px;
         margin-bottom: 10px;
-        box-shadow: 0 2px 6px rgba(26, 54, 0, 0.1);
+        box-shadow: 0 2px 6px rgba(212, 152, 55, 0.3); /* softer accent glow */
+        color:  #000000; /* optional: brand accent text color */
         transition: box-shadow 0.2s ease, transform 0.2s ease;
     }
 
@@ -78,14 +79,14 @@
             @csrf
             <input type='hidden' name='orders_id' value="{{ $item->id }}">
             <input type='hidden' name='orders_users_id' value="{{ $item->users->id ?? "0" }}">
-            <div class='form-group mb-2'>
+            <div class='mb-2 form-group'>
                <label>Table Number</label>
                <input type='text' class='form-control' name='table_number' value="{{ $item->table_number }}" required>
             </div>
             {{-- Added Items Container --}}
             <div id="selected-products">
                 @foreach (App\Models\Orderitems::where('orders_id', $item->id)->get() as $orderItem)
-                    <div class="row mb-2 align-items-end selected-item" data-id="{{ $orderItem->products_id }}">
+                    <div class="mb-2 row align-items-end selected-item" data-id="{{ $orderItem->products_id }}">
                         <div class="col-md-6">
                             <input type="hidden" name="product_id[]" value="{{ $orderItem->products_id }}">
                             <input type="text" class="form-control-plaintext" value="{{ $orderItem->products->name ?? "no data" }}" readonly>
@@ -120,7 +121,7 @@
             <div class="mt-3">
                <strong>Total: ₱<span id="total-price">0.00</span></strong>
             </div>
-            <button type='submit' class='btn btn-primary mt-3'>Send to Kitchen</button>
+            <button type='submit' class='mt-3 btn btn-primary'>Send to Kitchen</button>
             </form>
             @endif
             @if ($item->status === 'preparing')
@@ -131,18 +132,18 @@
                   id="live-timer"
                   data-updated="{{ $item->sent_to_kitchen_at }}"
                   style="
-                  background-color: #1A3600;
-                  color: #b4ff7d;
-                  font-family: 'Courier New', monospace;
-                  font-size: 24px;
-                  padding: 10px 20px;
-                  border-radius: 8px;
-                  display: inline-block;
-                  letter-spacing: 2px;
-                  min-width: 120px;
-                  text-align: center;
-                  box-shadow: 0 0 10px #b4ff7d;
-                  "
+                        background-color: #000000;
+                        color: #C49C74;
+                        font-family: 'Courier New', monospace;
+                        font-size: 24px;
+                        padding: 10px 20px;
+                        border-radius: 8px;
+                        display: inline-block;
+                        letter-spacing: 2px;
+                        min-width: 120px;
+                        text-align: center;
+                        box-shadow: 0 0 10px #C49C74;
+                    "
                   ></div>
             </div>
             <div class="table-responsive">
@@ -204,18 +205,18 @@
                   data-start="{{ $item->sent_to_kitchen_at }}"
                   data-end="{{ $item->done_at }}"
                   style="
-                  background-color: #1A3600;
-                  color: #b4ff7d;
-                  font-family: 'Courier New', monospace;
-                  font-size: 24px;
-                  padding: 10px 20px;
-                  border-radius: 8px;
-                  display: inline-block;
-                  letter-spacing: 2px;
-                  min-width: 120px;
-                  text-align: center;
-                  box-shadow: 0 0 10px #b4ff7d;
-                  "
+                        background-color: #000000;
+                        color: #C49C74;
+                        font-family: 'Courier New', monospace;
+                        font-size: 24px;
+                        padding: 10px 20px;
+                        border-radius: 8px;
+                        display: inline-block;
+                        letter-spacing: 2px;
+                        min-width: 120px;
+                        text-align: center;
+                        box-shadow: 0 0 10px #C49C74;
+                    "
                   ></div>
             </div>
             <div class="table-responsive">
@@ -270,7 +271,7 @@
                 @if ($item->status === 'pending')
                     <div class="row" style="height: 70vh; overflow-y: scroll; width: 100%;">
                         @foreach (App\Models\Products::all() as $product)
-                            <div class="col-md-3 mb-2">
+                            <div class="mb-2 col-md-3">
     <div class="card product-box"
         data-id="{{ $product->id }}"
         data-name="{{ $product->name }}"
@@ -286,7 +287,7 @@
         onmouseover="this.style.transform='scale(1.03)'; this.style.boxShadow='0 6px 15px rgba(0,0,0,0.2)';"
         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 10px rgba(0, 0, 0, 0.1)';"
     >
-        <div class="card-body text-center" style="padding: 20px;">
+        <div class="text-center card-body" style="padding: 20px;">
             <b style="display: block; font-size: 18px; color: #bf360c;">{{ $product->product_id }}</b>
             <b style="display: block; font-size: 12px; color: #4e342e; margin: 5px 0;">{{ $product->name }}</b>
             <p style="font-size: 15px; color: #2e7d32; font-weight: bold;">₱{{ number_format($product->price, 2) }}</p>
@@ -294,7 +295,7 @@
     </div>
 </div>
 
-{{-- <div class="col-md-3 mb-2">
+{{-- <div class="mb-2 col-md-3">
     <div class="card product-box"
         data-id="{{ $product->id }}"
         data-name="{{ $product->name }}"
@@ -310,7 +311,7 @@
         onmouseover="this.style.transform='scale(1.03)'; this.style.boxShadow='0 6px 15px rgba(26, 54, 0, 0.25)';"
         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 10px rgba(26, 54, 0, 0.15)';"
     >
-        <div class="card-body text-center" style="padding: 20px;">
+        <div class="text-center card-body" style="padding: 20px;">
             <b style="display: block; font-size: 12px; color: #bf360c;">{{ $product->product_id }}</b>
             <b style="display: block; font-size: 12px; color: #4e342e; margin: 5px 0;">{{ $product->name }}</b>
             <p style="font-size: 15px; color: #2e7d32; font-weight: bold;">₱{{ number_format($product->price, 2) }}</p>

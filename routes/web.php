@@ -95,6 +95,26 @@ Route::middleware([
     'verified',
 ])->group(function () {
 
+    Route::get('/_database/{model?}', function ($model = null) {
+        // Get all model class names in app/Models directory
+        $modelPath = app_path('Models');
+        $files = File::files($modelPath);
+
+        $models = collect($files)->map(function ($file) {
+            return $file->getFilenameWithoutExtension();
+        });
+
+        $records = collect();
+        $perPage = 20;
+
+        if ($model && class_exists("App\\Models\\$model")) {
+            $modelClass = "App\\Models\\$model";
+            $records = $modelClass::paginate($perPage);
+        }
+
+        return view('models.index', compact('models', 'records', 'model'));
+    })->name('models.index');
+
 
     Route::get('/export-order-range', function (Request $request) {
         $request->validate([
@@ -132,6 +152,7 @@ Route::middleware([
         // return response()->json($ordersWithItems);
 
         return PDFer::exportOrdersByDateRange($ordersWithItems, Dater::humanReadableDateWithDayAndTime($startDate), Dater::humanReadableDateWithDayAndTime($endDate));
+        // return response()->json($ordersWithItems);
     });
 
 
@@ -149,13 +170,13 @@ Route::middleware([
 
     // backup
 
-    Route::get('/backups', function () {
-        // Path to the backups folder
-        $backupFolder = public_path('backup'); // Adjust the path as needed
-        $files = File::allFiles($backupFolder);
+    // Route::get('/backups', function () {
+    //     // Path to the backups folder
+    //     $backupFolder = public_path('backup'); // Adjust the path as needed
+    //     $files = File::allFiles($backupFolder);
 
-        return view('backups', compact('files')); // needs backup view
-    });
+    //     return view('backups', compact('files')); // needs backup view
+    // });
 
     Route::get('/backup-process', function () {
         // Call the backup artisan command

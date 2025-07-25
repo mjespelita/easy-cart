@@ -17,7 +17,7 @@
 
         <style>
             body > div > div {
-                background-image: url('assets/app-bg.PNG');
+                background-image: url('assets/easy-cart-background.jpg');
                 background-size: cover;
                 background-repeat: no-repeat;
                 background-position: center center;
@@ -47,7 +47,7 @@
         </style>
     </head>
     <body>
-        <div class="font-sans text-gray-900 antialiased">
+        <div class="font-sans antialiased text-gray-900">
             {{ $slot }}
         </div>
 

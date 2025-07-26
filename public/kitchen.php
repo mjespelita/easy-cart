@@ -118,7 +118,7 @@
 </head>
 <body>
   <div class="py-3 container-fluid">
-    <h1 class="text-center page-title">Kitchen Orders Board</h1>
+    <h1 class="text-center page-title">Loading...</h1>
 
     <div class="row g-3 orders">
 
@@ -129,18 +129,22 @@
 <script src='assets/jquery/jquery.min.js'></script>
 <script src='assets/pollinator/pollinator.min.js'></script>
 <script src='assets/pollinator/polly.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function () {
 
-    // usage
+    const typeValue = new URL(window.location.href).searchParams.get("type");
 
     const polling = new PollingManager({
-        url: `/orders-api`, // API to fetch data
+        url: `/orders-api/${typeValue}`, // API to fetch data
         delay: 5000, // Poll every 5 seconds
         failRetryCount: 3, // Retry on failure
         onSuccess: (res) => {
+
+            $('.page-title').text(res.type + " Orders Board");
+
             $('.orders').html('');
-            res.forEach(order => {
+            res.data.forEach(order => {
                 let itemsHTML = `
                     <table class="table mb-0 table-sm table-striped">
                         <thead class="table-light">
@@ -150,6 +154,7 @@
                                 <th>Product</th>
                                 <th>Price</th>
                                 <th>Subtotal</th>
+                                <th>Mark As Done</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -166,6 +171,9 @@
                             <td>${item.product_name}</td>
                             <td>₱${item.total}</td>
                             <td>₱${item.subtotal}</td>
+                            <td>
+                                <input type="checkbox" class="done-menu" data-id="${item.id}" ${item.done == 1 ? "checked" : ""}>
+                            </td>
                         </tr>
                     `;
                 });
@@ -215,29 +223,29 @@
                 const timerId = `timer-${order.id}`;
 
                 itemsHTML += `
-                    <tr class="table-active fw-bold">
-                        <td colspan="4" class="text-end">Sent to kitchen:</td>
-                        <td>
-                            ${readableSentTime}<br>
-                            <small>⏱ <span id="${timerId}"></span></small>
-                        </td>
-                    </tr>
-                    <tr class="table-active fw-bold">
-                        <td colspan="4" class="text-end">Total:</td>
-                        <td>${formatMoney(order.total)}</td>
-                    </tr>
-                    <tr class="table-active fw-bold">
-                        <td colspan="4" class="text-end">Discount:</td>
-                        <td>${order.discount}%</td>
-                    </tr>
-                    <tr class="table-success fw-bold">
-                        <td colspan="4" class="text-end">Discounted Price:</td>
-                        <td>${formatMoney(order.discounted_price)}</td>
-                    </tr>
+                        <tr class="table-active fw-bold">
+                            <td colspan="5" class="text-end">Sent to kitchen:</td>
+                            <td>
+                                ${readableSentTime}<br>
+                                <small>⏱ <span id="${timerId}"></span></small>
+                            </td>
+                        </tr>
+                        <tr class="table-active fw-bold">
+                            <td colspan="5" class="text-end">Total:</td>
+                            <td>${formatMoney(order.total)}</td>
+                        </tr>
+                        <tr class="table-active fw-bold">
+                            <td colspan="5" class="text-end">Discount:</td>
+                            <td>${order.discount}%</td>
+                        </tr>
+                        <tr class="table-success fw-bold">
+                            <td colspan="5" class="text-end">Discounted Price:</td>
+                            <td>${formatMoney(order.discounted_price)}</td>
+                        </tr>
                     </tbody>
                 </table>
 
-                <button style="font-size: 10px; margin-top: 10px;" class="mark-as-done-api" data-id="${order.id}">Mark As Done</button>
+                <button style="font-size: 10px; margin-top: 10px;" class="mark-as-done-api" data-id="${order.id}" ${order.items}>Mark As Done</button>
                 `;
 
                 setTimeout(() => diffTimer(order.sent_to_kitchen_at, timerId), 100); // slight delay to ensure DOM element exists
@@ -245,7 +253,9 @@
                 $('.orders').prepend(`
                     <div class="mb-4 col-md-6 col-lg-4">
                         <div class="p-3 rounded shadow-sm order-card">
-                            <div class="mb-2 order-title fw-bold">Table #${order.table_number}</div>
+                            <div class="mb-2 order-title fw-bold text-warning" style="text-align: left;">${order.order_number}</div>
+                            <div class="mb-2 text-warning" style="text-align: left;">From ${order.user_name} (${order.users.role})</div>
+                            <div class="mb-2 order-title fw-bold" style="text-align: left;">Table #${order.table_number}</div>
                             ${itemsHTML}
                         </div>
                     </div>
@@ -253,13 +263,31 @@
             });
 
             $('.mark-as-done-api').click(function () {
-                let dataId = $(this).attr('data-id');
+                const $btn = $(this); // 🔑 Save reference
+                $btn.hide();
+
+                let dataId = $btn.attr('data-id');
+
                 $.get('/mark-as-done-api/' + dataId, function (res) {
-                    console.log(res);
+                    if (res === 1) {
+                        Swal.fire({
+                            title: "Good job!",
+                            text: "Order Completed!",
+                            icon: "success"
+                        });
+                    } else {
+                        $btn.show(); // ✅ Use the saved reference here
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "There are pending items. You can’t mark the order as done."
+                        });
+                    }
                 }).fail(err => {
                     console.log(err);
-                })
-            })
+                    $btn.show(); // ✅ Also show it again on error
+                });
+            });
         },
         onError: (error) => {
             console.error("Error fetching data:", error);
@@ -269,6 +297,16 @@
 
     // Start polling
     polling.start();
+
+    // ✅ Avoid duplicate click bindings
+    $(document).off('click', '.done-menu').on('click', '.done-menu', function () {
+        let dataId = $(this).attr('data-id');
+        $.get('/mark-item-as-done-api/' + dataId, function (res) {
+            console.log(res);
+        }).fail(err => {
+            console.log(err);
+        });
+    });
     // $.get('/orders-api', function (res) {
     //     console.log(res)
 

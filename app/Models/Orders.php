@@ -11,9 +11,12 @@ class Orders extends Model
 protected $fillable = [
     "status",
     "sent_to_kitchen_at",
-    "done_at","users_id",
+    "done_at",
+    "users_id",
     "table_number",
     "total",
+    "order_number",
+    "order_type",
     "isTrash"
 ];
     use HasFactory;
@@ -26,5 +29,10 @@ protected $fillable = [
     public function orderItems()
     {
         return $this->hasMany(Orderitems::class);
+    }
+
+    public function types()
+    {
+        return $this->belongsTo(Types::class, 'order_type');
     }
 }

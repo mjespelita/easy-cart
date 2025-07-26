@@ -48,9 +48,23 @@
                 <i class="fas fa-box-open"></i> Products
             </a>
 
-            <a target="_blank" href="{{ url('kitchen.html') }}" class="">
-                <i class="fas fa-utensils"></i> Kitchen Orders Board
+            <a href="{{ url('types') }}" class="{{ request()->is('types', 'create-types', 'trash-types', 'show-types/*', 'edit-types/*', 'delete-types/*', 'types-search*') ? 'active' : '' }}">
+                <i class="fas fa-bars"></i> Types
             </a>
+
+            <hr>
+            @forelse (App\Models\Types::all() as $type)
+                <a target="_blank" href="{{ url('kitchen.php?type='.$type->id) }}" class="">
+                    <i class="fas fa-utensils"></i> {{ $type->name }} Orders Board
+                </a>
+            @empty
+                <b>No Available Types...</b>
+            @endforelse
+            <hr>
+
+            {{-- <a target="_blank" href="{{ url('kitchen.html') }}" class="">
+                <i class="fas fa-utensils"></i> Kitchen Orders Board
+            </a> --}}
 
             {{-- <a href="{{ url('orderstatuslogs') }}" class="{{ request()->is('orderstatuslogs', 'create-orderstatuslogs', 'trash-orderstatuslogs', 'show-orderstatuslogs/*', 'edit-orderstatuslogs/*', 'delete-orderstatuslogs/*', 'orderstatuslogs-search*') ? 'active' : '' }}">
                 <i class="fas fa-stream"></i> Order Status

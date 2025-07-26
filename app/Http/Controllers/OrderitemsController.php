@@ -90,7 +90,9 @@ class OrderitemsController extends Controller {
         /******************************************************** */
 
         // return back()->with('success', 'Orderitems Added Successfully!');
-        return response()->json('inserted');
+        return response()->json([
+            'order_type' => Orders::where('id', $request->orderId)->value('order_type')
+        ]);
     }
 
     /**

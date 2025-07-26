@@ -12,6 +12,12 @@ class OrdersSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $i = 1;
+        foreach (Orders::all() as $order) {
+            Orders::where('id', $order['id'])->update([
+                'order_number' => 'ORDER_#'.$i
+            ]);
+            $i++;
+        }
     }
 }

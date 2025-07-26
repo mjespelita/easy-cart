@@ -50,6 +50,12 @@ use App\Models\Users;
 
 // end of import
 
+use App\Http\Controllers\TypesController;
+use App\Models\Types;
+
+// end of import
+
+
 
 
 
@@ -59,9 +65,9 @@ Route::get('/', function () {
 
 // API
 
-Route::get('/orders-api', function () {
+Route::get('/orders-api/{typeId}', function ($typeId) {
 
-    $orders = Orders::where('status', 'preparing')->get();
+    $orders = Orders::where('status', 'preparing')->where('order_type', $typeId)->get();
 
     $ordersWithItems = $orders->map(function ($order) {
         $order->items = Orderitems::with(['orderUsers', 'products'])
@@ -76,22 +82,59 @@ Route::get('/orders-api', function () {
                     'user_name' => $item->orderUsers->name ?? null,
                     'product_name' => $item->products->name ?? null,
                     'product_id' => $item->products->product_id ?? null,
+                    'done' => $item->done,
                 ];
             });
+
+        // Add user_name from the order's users() relationship
+        $order->user_name = $order->users->name ?? null;
 
         return $order;
     });
 
-    return response()->json($ordersWithItems);
+    return response()->json([
+        'data' => $ordersWithItems,
+        'type' => Types::where('id', $typeId)->value('name')
+    ]);
 });
 
 Route::get('/mark-as-done-api/{ordersId}', function ($ordersId) {
-    Orders::where('id', $ordersId)->update([
-        'status' => 'done',
-        'done_at' => date('Y-m-d H:i:s'),
-    ]);
 
-    return response()->json('done');
+    $totalOrderItems = Orderitems::where('orders_id', $ordersId)->count();
+    $totalDoneOrders = Orderitems::where('orders_id', $ordersId)->where('done', 1)->count();
+
+    if ($totalOrderItems === $totalDoneOrders) {
+        Orders::where('id', $ordersId)->update([
+            'status' => 'done',
+            'done_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        return response()->json(1);
+    }
+
+    return response()->json(0);
+});
+
+Route::get('/mark-item-as-done-api/{itemId}', function ($itemId) {
+
+    $checkIfAlreadyDone = Orderitems::where('id', $itemId)->value('done');
+    $done = null;
+
+    if ($checkIfAlreadyDone) {
+        Orderitems::where('id', $itemId)->update([
+            'done' => 0
+        ]);
+
+        $done = 0;
+    } else {
+        Orderitems::where('id', $itemId)->update([
+            'done' => 1
+        ]);
+
+        $done = 1;
+    }
+
+    return response()->json($done);
 });
 
 
@@ -282,16 +325,18 @@ Route::middleware([
             'done_at' => date('Y-m-d H:i:s'),
         ]);
 
-        return redirect('/show-orders/'.$ordersId);
+        $orderType = Orders::where('id', $ordersId)->value('order_type');
+
+        return redirect('/show-orders/'.$ordersId.'/'.$orderType);
     });
 
     Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
     Route::get('/preparing-orders', [OrdersController::class, 'preparing']);
     Route::get('/done-orders', [OrdersController::class, 'done']);
 
-    Route::get('/create-orders', [OrdersController::class, 'create'])->name('orders.create');
-    Route::get('/edit-orders/{ordersId}', [OrdersController::class, 'edit'])->name('orders.edit');
-    Route::get('/show-orders/{ordersId}', [OrdersController::class, 'show'])->name('orders.show');
+    Route::get('/create-orders/{typeId}', [OrdersController::class, 'create']);
+    Route::get('/edit-orders/{ordersId}/{typeId}', [OrdersController::class, 'edit'])->name('orders.edit');
+    Route::get('/show-orders/{ordersId}/{typeId}', [OrdersController::class, 'show'])->name('orders.show');
     Route::get('/delete-orders/{ordersId}', [OrdersController::class, 'delete'])->name('orders.delete');
     Route::get('/destroy-orders/{ordersId}', [OrdersController::class, 'destroy'])->name('orders.destroy');
     Route::post('/store-orders', [OrdersController::class, 'store'])->name('orders.store');
@@ -682,10 +727,10 @@ Route::middleware([
     Route::get('/users-paginate', function (Request $request) {
         // Retrieve the 'paginate' parameter from the URL (e.g., ?paginate=10)
         $paginate = $request->input('paginate', 10); // Default to 10 if no paginate value is provided
-    
+
         // Paginate the users based on the 'paginate' value
         $users = Users::paginate($paginate); // Paginate with the specified number of items per page
-    
+
         // Return the view with the paginated users
         return view('users.users', compact('users'));
     });
@@ -695,18 +740,18 @@ Route::middleware([
         // Retrieve 'from' and 'to' dates from the URL
         $from = $request->input('from');
         $to = $request->input('to');
-    
+
         // Retrieve 'from' and 'to' dates from the URL
         $from = $request->input('from');
         $to = $request->input('to');
-    
+
         // Default query for users
         $query = Users::query();
-    
+
         // Convert dates to Carbon instances for better comparison
         $fromDate = $from ? Carbon::parse($from)->startOfDay() : null;
         $toDate = $to ? Carbon::parse($to)->endOfDay() : null;
-    
+
         // Check if both 'from' and 'to' dates are provided
         if ($fromDate && $toDate) {
             // Ensure correct date filtering with full day range
@@ -717,9 +762,81 @@ Route::middleware([
             // If 'from' or 'to' are missing, show all users without filtering
             $users = $query->paginate(10);
         }
-    
+
         // Return the view with users and the selected date range
         return view('users.users', compact('users', 'from', 'to'));
+    });
+
+    // end...
+
+    Route::get('/types', [TypesController::class, 'index'])->name('types.index');
+    Route::get('/create-types', [TypesController::class, 'create'])->name('types.create');
+    Route::get('/edit-types/{typesId}', [TypesController::class, 'edit'])->name('types.edit');
+    Route::get('/show-types/{typesId}', [TypesController::class, 'show'])->name('types.show');
+    Route::get('/delete-types/{typesId}', [TypesController::class, 'delete'])->name('types.delete');
+    Route::get('/destroy-types/{typesId}', [TypesController::class, 'destroy'])->name('types.destroy');
+    Route::post('/store-types', [TypesController::class, 'store'])->name('types.store');
+    Route::post('/update-types/{typesId}', [TypesController::class, 'update'])->name('types.update');
+    Route::post('/types-delete-all-bulk-data', [TypesController::class, 'bulkDelete']);
+    Route::post('/types-move-to-trash-all-bulk-data', [TypesController::class, 'bulkMoveToTrash']);
+    Route::post('/types-restore-all-bulk-data', [TypesController::class, 'bulkRestore']);
+    Route::get('/trash-types', [TypesController::class, 'trash']);
+    Route::get('/restore-types/{typesId}', [TypesController::class, 'restore'])->name('types.restore');
+
+    // Types Search
+    Route::get('/types-search', function (Request $request) {
+        $search = $request->get('search');
+
+        // Perform the search logic
+        $types = Types::when($search, function ($query) use ($search) {
+            return $query->where('name', 'like', "%$search%");
+        })->paginate(10);
+
+        return view('types.types', compact('types', 'search'));
+    });
+
+    // Types Paginate
+    Route::get('/types-paginate', function (Request $request) {
+        // Retrieve the 'paginate' parameter from the URL (e.g., ?paginate=10)
+        $paginate = $request->input('paginate', 10); // Default to 10 if no paginate value is provided
+
+        // Paginate the types based on the 'paginate' value
+        $types = Types::paginate($paginate); // Paginate with the specified number of items per page
+
+        // Return the view with the paginated types
+        return view('types.types', compact('types'));
+    });
+
+    // Types Filter
+    Route::get('/types-filter', function (Request $request) {
+        // Retrieve 'from' and 'to' dates from the URL
+        $from = $request->input('from');
+        $to = $request->input('to');
+
+        // Retrieve 'from' and 'to' dates from the URL
+        $from = $request->input('from');
+        $to = $request->input('to');
+
+        // Default query for types
+        $query = Types::query();
+
+        // Convert dates to Carbon instances for better comparison
+        $fromDate = $from ? Carbon::parse($from)->startOfDay() : null;
+        $toDate = $to ? Carbon::parse($to)->endOfDay() : null;
+
+        // Check if both 'from' and 'to' dates are provided
+        if ($fromDate && $toDate) {
+            // Ensure correct date filtering with full day range
+            $types = $query->whereBetween('created_at', [$fromDate, $toDate])
+                           ->orderBy('created_at', 'desc')
+                           ->paginate(10);
+        } else {
+            // If 'from' or 'to' are missing, show all types without filtering
+            $types = $query->paginate(10);
+        }
+
+        // Return the view with types and the selected date range
+        return view('types.types', compact('types', 'from', 'to'));
     });
 
     // end...

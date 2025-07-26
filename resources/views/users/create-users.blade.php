@@ -27,7 +27,9 @@
                 <div class='form-group'>
                     <label for='name'>Role</label>
                     <select name="role" id="" class="form-control">
+                        <option value="kitchen">Kitchen</option>
                         <option value="waiter">Waiter</option>
+                        <option value="bartender">Bartender</option>
                         <option value="counter">Counter</option>
                         <option value="admin">Admin</option>
                     </select>

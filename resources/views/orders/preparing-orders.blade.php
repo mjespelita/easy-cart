@@ -8,7 +8,7 @@
         </div>
         <div class='col-lg-6 col-md-6 col-sm-12' style='text-align: right;'>
             {{-- <a href='{{ url('trash-orders') }}'><button class='btn btn-danger'><i class='fas fa-trash'></i> Trash <span class='text-warning'>{{ App\Models\Orders::where('isTrash', '1')->count() }}</span></button></a> --}}
-            <a href='{{ route('orders.create') }}'><button class='btn btn-success'><i class='fas fa-plus'></i> Add Orders</button></a>
+            {{-- <a href='{{ route('orders.create') }}'><button class='btn btn-success'><i class='fas fa-plus'></i> Add Orders</button></a> --}}
         </div>
     </div>
 
@@ -135,11 +135,13 @@
                                     {{ !empty($item->done_at) ? Smark\Smark\Dater::humanReadableDateWithDayAndTime($item->done_at) : '---' }}
                                 </p>
                                 <p><strong>Ordered By:</strong> {{ $item->users->name ?? 'No Data' }} - {{ ucfirst($item->users->role) ?? "no data" }}</p>
+                                <p><strong>Order Number:</strong> <b class="text-primary">{{ $item->order_number }}</b></p>
+                                <p><strong>Order Type:</strong> <b class="text-primary">{{ $item->types->name ?? "no data" }}</b></p>
                             </div>
                             <div class="card-footer d-flex">
-                                <a href="{{ route('orders.show', $item->id) }}" class="p-1 text-success"><i class="fas fa-eye"></i></a>
+                                <a href="{{ route('orders.show', ['ordersId' => $item->id, 'typeId' => $item->order_type]) }}" class="p-1 text-success"><i class="fas fa-eye"></i></a>
                                 @if ($item->status != 'done')
-                                    <a href="{{ route('orders.edit', $item->id) }}" class="p-1 text-info"><i class="fas fa-edit"></i></a>
+                                    <a href="{{ route('orders.edit', ['ordersId' => $item->id, 'typeId' => $item->order_type]) }}" class="p-1 text-info"><i class="fas fa-edit"></i></a>
                                 @endif
                                 <a href="{{ route('orders.delete', $item->id) }}" class="p-1 text-danger"><i class="fas fa-trash"></i></a>
                             </div>

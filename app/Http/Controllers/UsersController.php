@@ -86,11 +86,15 @@ class UsersController extends Controller {
     public function update(UpdateUsersRequest $request, User $users, $usersId)
     {
         /* Log ************************************************** */
-        $oldName = User::where('id', $usersId)->value('name');
+        // $oldName = User::where('id', $usersId)->value('name');
         // Logs::create(['log' => Auth::user()->name.' updated a Users from "'.$oldName.'" to "'.$request->name.'".']);
         /******************************************************** */
 
-        User::where('id', $usersId)->update(['name' => $request->name,'email' => $request->email,'password' => $request->password,'role' => $request->role]);
+        User::where('id', $usersId)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role
+        ]);
 
         return back()->with('success', 'Users Updated Successfully!');
     }

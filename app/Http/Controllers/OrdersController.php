@@ -55,15 +55,17 @@ class OrdersController extends Controller {
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($typeId)
     {
         $newOrder = Orders::create([
             'status' => 'pending',
             'sent_to_kitchen_at' => '',
             'done_at' => '',
-            'users_id' => Auth::user()->id
+            'users_id' => Auth::user()->id,
+            'order_number' => 'ORDER_#'.Orders::count() + 1,
+            'order_type' => $typeId
         ]);
-        return redirect('/show-orders/'.$newOrder->id);
+        return redirect('/show-orders/'.$newOrder->id.'/'.$typeId);
     }
 
     /**
@@ -83,20 +85,21 @@ class OrdersController extends Controller {
     /**
      * Display the specified resource.
      */
-    public function show(Orders $orders, $ordersId)
+    public function show(Orders $orders, $ordersId, $typesId)
     {
         $orderItems = Orderitems::where('orders_id', $ordersId)->get();
 
         return view('orders.show-orders', [
             'item' => Orders::where('id', $ordersId)->first(),
-            'orderItems' => $orderItems
+            'orderItems' => $orderItems,
+            'typesId' => $typesId
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Orders $orders, $ordersId)
+    public function edit(Orders $orders, $ordersId, $typesId)
 {
     // Reset the order (optional logic)
     Orders::where('id', $ordersId)->update([
@@ -111,7 +114,8 @@ class OrdersController extends Controller {
 
     return view('orders.show-orders', [
         'item' => $order,
-        'orderItems' => $orderItems
+        'orderItems' => $orderItems,
+        'typesId' => $typesId
     ]);
 }
 
@@ -171,7 +175,7 @@ class OrdersController extends Controller {
         foreach ($request->ids as $value) {
 
             /* Log ************************************************** */
-            $oldName = Orders::where('id', $value)->value('name');
+            // $oldName = Orders::where('id', $value)->value('name');
             // Logs::create(['log' => Auth::user()->name.' deleted a Orders "'.$oldName.'".']);
             /******************************************************** */
 

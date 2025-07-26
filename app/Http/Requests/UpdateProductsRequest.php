@@ -23,7 +23,7 @@ class UpdateProductsRequest extends FormRequest
     {
         return [
             //
-'product_id' => 'required','name' => 'required','description' => 'required','price' => 'required',
+'product_id' => 'required','name' => 'required','description' => 'required','price' => 'required', 'types_id' => 'required'
         ];
     }
 }

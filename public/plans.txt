@@ -1,0 +1,32 @@
+July 25, 2025 - concerns
+July 26, 2025 - written
+
+ok - (July 26, 2025) - Drinks and Food Type (separated by types)
+
+ok - (July 26, 2025) - Order Search
+
+Kitchen server - on the kitchen view dapat may name sa waiter
+
+KItchen Box - checked if na tapos na ang Order
+
+Disable mark as done - once na dre pa ma check tanan
+
+ok - (July 26, 2025) - Order Number
+ok - (July 26, 2025) - Table Number - type number
+
+ok - (July 26, 2025) Entities
+Kitchen
+waiter
+Bartender
+Admin
+
+Separate order of drinks and food.
+
+ok - (July 26, 2025)
+
+
+Release
+database seeder
+pdfer
+
+double check ang mga checkboxes sa builk action...

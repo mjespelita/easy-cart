@@ -9,7 +9,27 @@
         <div class='col-lg-6 col-md-6 col-sm-12' style='text-align: right;'>
             {{-- <a href='{{ url('trash-orders') }}'><button class='btn btn-danger'><i class='fas fa-trash'></i> Trash <span class='text-warning'>{{ App\Models\Orders::where('isTrash', '1')->count() }}</span></button></a> --}}
             <button class='btn btn-primary' data-bs-toggle="modal" data-bs-target="#exampleModal"><i class='fas fa-download'></i> Export Orders</button>
-            <a href='{{ route('orders.create') }}'><button class='btn btn-success'><i class='fas fa-plus'></i> Add Orders</button></a>
+            <button class='btn btn-primary' data-bs-toggle="modal" data-bs-target="#addOrders"><i class='fas fa-plus'></i> Add Orders</button>
+
+
+            <!-- Modal For Choices -->
+            <div class="modal fade" id="addOrders" tabindex="-1" aria-labelledby="addOrdersLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="addOrdersLabel">Select Type</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="text-align: left">
+                            @forelse (App\Models\Types::all() as $type)
+                                <a href='{{ url('create-orders/'.$type->id) }}' class="selected-type" type-id="{{ $type->id }}"><button class='btn btn-success'><i class='fas fa-plus'></i> {{ $type->name }}</button></a>
+                            @empty
+                                <b>No Types...</b>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -165,11 +185,13 @@
                                     {{ !empty($item->done_at) ? Smark\Smark\Dater::humanReadableDateWithDayAndTime($item->done_at) : '---' }}
                                 </p>
                                 <p><strong>Ordered By:</strong> {{ $item->users->name ?? 'No Data' }} - {{ ucfirst($item->users->role) ?? "no data" }}</p>
+                                <p><strong>Order Number:</strong> <b class="text-primary">{{ $item->order_number }}</b></p>
+                                <p><strong>Order Type:</strong> <b class="text-primary">{{ $item->types->name ?? "no data" }}</b></p>
                             </div>
                             <div class="card-footer d-flex">
-                                <a href="{{ route('orders.show', $item->id) }}" class="p-1 text-success"><i class="fas fa-eye"></i></a>
+                                <a href="{{ route('orders.show', ['ordersId' => $item->id, 'typeId' => $item->order_type]) }}" class="p-1 text-success"><i class="fas fa-eye"></i></a>
                                 @if ($item->status != 'done')
-                                    <a href="{{ route('orders.edit', $item->id) }}" class="p-1 text-info"><i class="fas fa-edit"></i></a>
+                                    <a href="{{ route('orders.edit', ['ordersId' => $item->id, 'typeId' => $item->order_type]) }}" class="p-1 text-info"><i class="fas fa-edit"></i></a>
                                 @endif
                                 <a href="{{ route('orders.delete', $item->id) }}" class="p-1 text-danger"><i class="fas fa-trash"></i></a>
                             </div>

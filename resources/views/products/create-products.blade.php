@@ -31,6 +31,19 @@
         </div>
 
         <div class='form-group'>
+            <label for='name'>Menu Type</label>
+            <select name="types_id" class="form-control" required>
+                <option value="" disabled selected>Select type</option>
+                @forelse (App\Models\Types::all() as $type)
+                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                @empty
+                    <option value="" disabled>No available types</option>
+                @endforelse
+            </select>
+        </div>
+
+
+        <div class='form-group'>
             <label for='name'>Description</label>
             <textarea name="description" id="" cols="30" class="form-control" rows="10" placeholder="Type here..." required></textarea>
         </div>

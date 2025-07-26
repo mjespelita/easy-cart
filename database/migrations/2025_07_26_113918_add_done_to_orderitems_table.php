@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('orderitems', function (Blueprint $table) {
+            $table->integer('done')->default(0);
         });
     }
 
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::table('orderitems', function (Blueprint $table) {
+            $table->dropColumn('done');
+        });
     }
 };

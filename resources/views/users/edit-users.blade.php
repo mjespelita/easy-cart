@@ -19,15 +19,17 @@
                     <input type='text' class='form-control' id='email' name='email' value='{{ $item->email }}' required>
                 </div>
 
-                <div class='form-group'>
+                {{-- <div class='form-group'>
                     <label for='name'>Password</label>
                     <input type='password' class='form-control' id='password' name='password' value='{{ $item->password }}' required>
-                </div>
+                </div> --}}
 
                 <div class='form-group'>
                     <label for='name'>Role</label>
                     <select name="role" id="" class="form-control">
+                        <option value="kitchen">Kitchen</option>
                         <option value="waiter">Waiter</option>
+                        <option value="bartender">Bartender</option>
                         <option value="counter">Counter</option>
                         <option value="admin">Admin</option>
                     </select>

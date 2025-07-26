@@ -98,7 +98,7 @@
                                 <td>{{ $item->role }}</td>
                                 <td>
                                     <a href='{{ route('users.show', $item->id) }}'><i class='fas fa-eye text-success'></i></a>
-                                    {{-- <a href='{{ route('users.edit', $item->id) }}'><i class='fas fa-edit text-info'></i></a> --}}
+                                    <a href='{{ route('users.edit', $item->id) }}'><i class='fas fa-edit text-info'></i></a>
                                     <a href='{{ route('users.delete', $item->id) }}'><i class='fas fa-trash text-danger'></i></a>
                                 </td>
                             </tr>

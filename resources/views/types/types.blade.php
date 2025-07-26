@@ -4,11 +4,11 @@
 @section('content')
     <div class='row'>
         <div class='col-lg-6 col-md-6 col-sm-12'>
-            <h1>All Products</h1>
+            <h1>All Types</h1>
         </div>
         <div class='col-lg-6 col-md-6 col-sm-12' style='text-align: right;'>
-            <a href='{{ url('trash-products') }}'><button class='btn btn-danger'><i class='fas fa-trash'></i> Trash <span class='text-warning'>{{ App\Models\Products::where('isTrash', '1')->count() }}</span></button></a>
-            <a href='{{ route('products.create') }}'><button class='btn btn-success'><i class='fas fa-plus'></i> Add Products</button></a>
+            <a href='{{ url('trash-types') }}'><button class='btn btn-danger'><i class='fas fa-trash'></i> Trash <span class='text-warning'>{{ App\Models\Types::where('isTrash', '1')->count() }}</span></button></a>
+            <a href='{{ route('types.create') }}'><button class='btn btn-success'><i class='fas fa-plus'></i> Add Types</button></a>
         </div>
     </div>
 
@@ -31,7 +31,7 @@
                             </div>
                         </div>
                         <div class='col-8'>
-                            <form action='{{ url('/products-paginate') }}' method='get'>
+                            <form action='{{ url('/types-paginate') }}' method='get'>
                                 <div class='input-group'>
                                     <input type='number' name='paginate' class='form-control' placeholder='Paginate' value='{{ request()->get('paginate', 10) }}'>
                                     <div class='input-group-append'>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <div class='mt-2 col-lg-4 col-md-4 col-sm-12'>
-                    <form action='{{ url('/products-filter') }}' method='get'>
+                    <form action='{{ url('/types-filter') }}' method='get'>
                         <div class='input-group'>
                             <input type='date' class='form-control' id='from' name='from' required>
                             <b class='pt-2'>- to -</b>
@@ -58,7 +58,7 @@
                 </div>
                 <div class='mt-2 col-lg-4 col-md-4 col-sm-12'>
                     <!-- Search Form -->
-                    <form action='{{ url('/products-search') }}' method='GET'>
+                    <form action='{{ url('/types-search') }}' method='GET'>
                         <div class='input-group'>
                             <input type='text' name='search' value='{{ request()->get('search') }}' class='form-control' placeholder='Search...'>
                             <div class='input-group-append'>
@@ -76,30 +76,22 @@
                             <th scope='col'>
                             <input type='checkbox' name='' id='' class='checkAll'>
                             </th>
-                            <th>Product ID</th>
                             <th>Name</th>
-                            <th>Type</th>
-                            <th>Description</th>
-                            <th>Price</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        @forelse($products as $item)
+                        @forelse($types as $item)
                             <tr>
                                 <th scope='row'>
                                     <input type='checkbox' name='' id='' class='check' data-id='{{ $item->id }}'>
                                 </th>
-                                <td>{{ $item->product_id }}</td>
                                 <td>{{ $item->name }}</td>
-                                <td><b class="fw-bold text-success">{{ $item->types->name ?? "no data" }}</b></td>
-                                <td>{{ $item->description }}</td>
-                                <td>₱{{ Smark\Smark\Math::convertToMoneyFormat($item->price) }}</td>
                                 <td>
-                                    <a href='{{ route('products.show', $item->id) }}'><i class='fas fa-eye text-success'></i></a>
-                                    <a href='{{ route('products.edit', $item->id) }}'><i class='fas fa-edit text-info'></i></a>
-                                    <a href='{{ route('products.delete', $item->id) }}'><i class='fas fa-trash text-danger'></i></a>
+                                    <a href='{{ route('types.show', $item->id) }}'><i class='fas fa-eye text-success'></i></a>
+                                    <a href='{{ route('types.edit', $item->id) }}'><i class='fas fa-edit text-info'></i></a>
+                                    <a href='{{ route('types.delete', $item->id) }}'><i class='fas fa-trash text-danger'></i></a>
                                 </td>
                             </tr>
                         @empty
@@ -113,7 +105,7 @@
         </div>
     </div>
 
-    {{ $products->links('pagination::bootstrap-5') }}
+    {{ $types->links('pagination::bootstrap-5') }}
 
     <script src='{{ url('assets/jquery/jquery.min.js') }}'></script>
     <script>
@@ -134,7 +126,7 @@
                     array.push($(this).attr('data-id'));
                 });
 
-                $.post('/products-delete-all-bulk-data', {
+                $.post('/types-delete-all-bulk-data', {
                     ids: array,
                     _token: $("meta[name='csrf-token']").attr('content')
                 }, function (res) {
@@ -148,7 +140,7 @@
                     array.push($(this).attr('data-id'));
                 });
 
-                $.post('/products-move-to-trash-all-bulk-data', {
+                $.post('/types-move-to-trash-all-bulk-data', {
                     ids: array,
                     _token: $("meta[name='csrf-token']").attr('content')
                 }, function (res) {

@@ -23,7 +23,7 @@ class UpdateUsersRequest extends FormRequest
     {
         return [
             //
-'name' => 'required','email' => 'required','password' => 'required','role' => 'required',
+'name' => 'required','email' => 'required','role' => 'required',
         ];
     }
 }

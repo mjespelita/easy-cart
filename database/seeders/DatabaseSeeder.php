@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Discounts;
 use App\Models\Products;
 use App\Models\User;
+use App\Models\Orders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -18,11 +19,32 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Administrator',
-            'email' => 'admin@system.com',
-            'role' => 'admin',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Administrator',
+        //     'email' => 'admin@system.com',
+        //     'role' => 'admin',
+        // ]);
+
+        // $orders = Orders::all(); // You can sort by created_at or any other field
+
+        $i = 1;
+        foreach (Orders::all() as $order) {
+            Orders::where('id', $order['id'])->update([
+                // 'order_number' => 'ORDER_#'.$i,
+                'order_type' => 1
+            ]);
+            $i++;
+        }
+
+        // Types::create(['name' => 'Foods']);
+        // Types::create(['name' => 'Drinks']);
+
+        // foreach (Orders::all() as $order) {
+        //     Orders::whereNot('id', '')->update([
+        //         'order_type' => 'ORDER_#'.$i
+        //     ]);
+        //     $i++;
+        // }
 
         // User::factory()->create([
         //     'name' => 'Counter Staff',

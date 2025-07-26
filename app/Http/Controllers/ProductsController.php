@@ -51,7 +51,13 @@ class ProductsController extends Controller {
      */
     public function store(StoreProductsRequest $request)
     {
-        Products::create(['product_id' => $request->product_id,'name' => $request->name,'description' => $request->description,'price' => $request->price]);
+        Products::create([
+            'product_id' => $request->product_id,
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'types_id' => $request->types_id
+        ]);
 
         /* Log ************************************************** */
         // Logs::create(['log' => Auth::user()->name.' created a new Products '.'"'.$request->name.'"']);
@@ -90,7 +96,13 @@ class ProductsController extends Controller {
         // Logs::create(['log' => Auth::user()->name.' updated a Products from "'.$oldName.'" to "'.$request->name.'".']);
         /******************************************************** */
 
-        Products::where('id', $productsId)->update(['product_id' => $request->product_id,'name' => $request->name,'description' => $request->description,'price' => $request->price]);
+        Products::where('id', $productsId)->update([
+            'product_id' => $request->product_id,
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'types_id' => $request->types_id
+        ]);
 
         return back()->with('success', 'Products Updated Successfully!');
     }

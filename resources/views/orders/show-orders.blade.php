@@ -81,8 +81,9 @@
             <input type='hidden' name='orders_users_id' value="{{ $item->users->id ?? "0" }}">
             <div class='mb-2 form-group'>
                <label>Table Number</label>
-               <input type='text' class='form-control' name='table_number' value="{{ $item->table_number }}" required>
+               <input type='number' class='form-control' name='table_number' value="{{ $item->table_number }}" required>
             </div>
+
             {{-- Added Items Container --}}
             <div id="selected-products">
                 @foreach (App\Models\Orderitems::where('orders_id', $item->id)->get() as $orderItem)
@@ -190,7 +191,7 @@
                   </span>
                </h3>
                @endif
-               <a href="{{ url('/edit-orders/'.$item->id) }}"><button class="btn btn-outline-danger"><i class="fas fa-edit"></i> Edit Order</button></a>
+               <a href="{{ url('/edit-orders/'.$item->id.'/'.$item->order_type) }}"><button class="btn btn-outline-danger"><i class="fas fa-edit"></i> Edit Order</button></a>
                <a href="{{ url('/mark-as-done-order/'.$item->id) }}"><button class="btn btn-outline-success"><i class="fas fa-check"></i> Mark As Done</button></a>
             </div>
             @endif
@@ -267,33 +268,42 @@
    <div class="col-lg-7 col-md-7 col-sm-12">
       <div class='card'>
          <div class='card-body'>
+
+            {{-- <h2>{{ App\Models\Types::where('id', $typesId)->value('name') }}</h2> --}}
+
+            {{-- search bar for selected products --}}
+
+            <div class="mb-3 form-group">
+                <input type="text" class="form-control search-menu-input" placeholder="Search Menu...">
+            </div>
+
             <div class='table-responsive'>
                 @if ($item->status === 'pending')
                     <div class="row" style="height: 70vh; overflow-y: scroll; width: 100%;">
-                        @foreach (App\Models\Products::all() as $product)
+                        @foreach (App\Models\Products::where('types_id', $typesId)->get() as $product)
                             <div class="mb-2 col-md-3">
-    <div class="card product-box"
-        data-id="{{ $product->id }}"
-        data-name="{{ $product->name }}"
-        data-price="{{ $product->price }}"
-        style="
-            cursor: pointer;
-            border: 2px solid #f4e2d8;
-            border-radius: 12px;
-            background: linear-gradient(145deg, #fff8f1, #ffe8d1);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        "
-        onmouseover="this.style.transform='scale(1.03)'; this.style.boxShadow='0 6px 15px rgba(0,0,0,0.2)';"
-        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 10px rgba(0, 0, 0, 0.1)';"
-    >
-        <div class="text-center card-body" style="padding: 20px;">
-            <b style="display: block; font-size: 18px; color: #bf360c;">{{ $product->product_id }}</b>
-            <b style="display: block; font-size: 12px; color: #4e342e; margin: 5px 0;">{{ $product->name }}</b>
-            <p style="font-size: 15px; color: #2e7d32; font-weight: bold;">₱{{ number_format($product->price, 2) }}</p>
-        </div>
-    </div>
-</div>
+                                <div class="card product-box"
+                                    data-id="{{ $product->id }}"
+                                    data-name="{{ $product->name }}"
+                                    data-price="{{ $product->price }}"
+                                    style="
+                                        cursor: pointer;
+                                        border: 2px solid #f4e2d8;
+                                        border-radius: 12px;
+                                        background: linear-gradient(145deg, #fff8f1, #ffe8d1);
+                                        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                                        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+                                    "
+                                    onmouseover="this.style.transform='scale(1.03)'; this.style.boxShadow='0 6px 15px rgba(0,0,0,0.2)';"
+                                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 10px rgba(0, 0, 0, 0.1)';"
+                                >
+                                    <div class="text-center card-body" style="padding: 20px;">
+                                        <b style="display: block; font-size: 18px; color: #bf360c;">{{ $product->product_id }}</b>
+                                        <b style="display: block; font-size: 12px; color: #4e342e; margin: 5px 0;">{{ $product->name }}</b>
+                                        <p style="font-size: 15px; color: #2e7d32; font-weight: bold;">₱{{ number_format($product->price, 2) }}</p>
+                                    </div>
+                                </div>
+                            </div>
 
 {{-- <div class="mb-2 col-md-3">
     <div class="card product-box"
@@ -324,6 +334,10 @@
                     </div>
                 @endif
                <table class='table'>
+                    <tr>
+                        <th>Order Number</th>
+                        <td><b>{{ $item->order_number }}</b></td>
+                    </tr>
                   <tr>
                      <th>Status</th>
                      <td>{{ $item->status }}</td>
@@ -517,7 +531,7 @@
                             _token: csrf
                         }, function (res) {
                             Swal.fire("The order has been sent to the kitchen for preparation!", "", "success");
-                            window.location.href = '/show-orders/' + orderId;
+                            window.location.href = '/show-orders/' + orderId + '/' + res.order_type;
                         }).fail(err => {
                             // console.error('Submission failed:', err);
 
@@ -599,5 +613,16 @@
 updateTotal();
 
    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $(document).on("keyup", ".search-menu-input", function() {
+            var value = $(this).val().toLowerCase();
+            $("body > div.content > div > div.col-lg-7.col-md-7.col-sm-12 > div > div > div.table-responsive > div > div").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    })
 </script>
 @endsection

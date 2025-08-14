@@ -97,9 +97,63 @@
                                 <td>{{ $item->description }}</td>
                                 <td>₱{{ Smark\Smark\Math::convertToMoneyFormat($item->price) }}</td>
                                 <td>
-                                    <a href='{{ route('products.show', $item->id) }}'><i class='fas fa-eye text-success'></i></a>
-                                    <a href='{{ route('products.edit', $item->id) }}'><i class='fas fa-edit text-info'></i></a>
-                                    <a href='{{ route('products.delete', $item->id) }}'><i class='fas fa-trash text-danger'></i></a>
+                                    <div class="d-flex gap-1">
+                                        <a href="#" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#showProductConsumeHistory{{ $item->id }}">
+                                            <i class="fas fa-bars"></i>
+                                        </a>
+
+                                        <!-- History Modal -->
+                                        <div class="modal fade" id="showProductConsumeHistory{{ $item->id }}" tabindex="-1" aria-labelledby="showProductConsumeHistory{{ $item->id }}Label" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="showProductConsumeHistory{{ $item->id }}Label">{{ $item->name ?? "no data" }} Orders Per Day</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+
+                                                <!-- Modal Body -->
+                                                <div class="modal-body">
+                                                    <div style="height: 50vh; overflow-y: scroll;">
+                                                        @php
+                                                            // Get all orders for this product, grouped by date
+                                                            $ordersByDate = App\Models\Orderitems::where('products_id', $item->id)
+                                                                ->selectRaw('DATE(created_at) as date, SUM(quantity) as total_quantity')
+                                                                ->groupBy('date')
+                                                                ->orderBy('date', 'desc')
+                                                                ->get();
+                                                        @endphp
+
+                                                        <ul>
+                                                            @forelse ($ordersByDate as $order)
+                                                                <li><b class="text-primary">{{ \Carbon\Carbon::parse($order->date)->format('F j, Y') }}</b> - <b class="text-success">({{ $order->total_quantity }})</b></li>
+                                                            @empty
+                                                                <li>No orders...</li>
+                                                            @endforelse
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Modal Footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <a href="{{ route('products.show', $item->id) }}" class="btn btn-success btn-sm w-100">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('products.edit', $item->id) }}" class="btn btn-info btn-sm w-100">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{{ route('products.delete', $item->id) }}" class="btn btn-danger btn-sm w-100">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         @empty

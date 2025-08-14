@@ -81,7 +81,7 @@
             <input type='hidden' name='orders_users_id' value="{{ $item->users->id ?? "0" }}">
             <div class='mb-2 form-group'>
                <label>Table Number</label>
-               <input type='number' class='form-control' name='table_number' value="{{ $item->table_number }}" required>
+               <input type='text' class='form-control' name='table_number' value="{{ $item->table_number }}" required>
             </div>
 
             {{-- Added Items Container --}}
@@ -122,7 +122,7 @@
             <div class="mt-3">
                <strong>Total: ₱<span id="total-price">0.00</span></strong>
             </div>
-            <button type='submit' class='mt-3 btn btn-primary'>Send to Kitchen</button>
+            <button type='submit' class='mt-3 btn btn-primary'>Send For Preperation</button>
             </form>
             @endif
             @if ($item->status === 'preparing')
@@ -475,7 +475,7 @@
                e.preventDefault();
 
                Swal.fire({
-                    title: "Do you want to send these items to the kitchen? Is this your final order?",
+                    title: "Send these items for preparation? Is this your final order?",
                     showDenyButton: true,
                     showCancelButton: true,
                     confirmButtonText: "Yes",
@@ -530,7 +530,7 @@
                             discounted_price: discountedTotal,
                             _token: csrf
                         }, function (res) {
-                            Swal.fire("The order has been sent to the kitchen for preparation!", "", "success");
+                            Swal.fire("The order has been sent for preparation!", "", "success");
                             window.location.href = '/show-orders/' + orderId + '/' + res.order_type;
                         }).fail(err => {
                             // console.error('Submission failed:', err);

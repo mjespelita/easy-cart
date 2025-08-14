@@ -122,7 +122,7 @@
             <div class="mt-3 row">
                 @forelse($orders as $item)
                     <div class="mb-4 col-md-6 col-lg-4">
-                        <div class="shadow-sm card border-success">
+                        <div class="shadow-sm card border-dark">
                             <div class="text-white card-header d-flex justify-content-between align-items-center" style="background: #1B1B1B;">
                                 <strong>Table: {{ $item->table_number }} from {{ $item->users->name ?? "no data" }} - {{ ucfirst($item->users->role) ?? "no data" }}</strong>
                                 <input type="checkbox" class="form-check-input check" data-id="{{ $item->id }}">
@@ -172,6 +172,38 @@
                                 @endif
 
                                 <p><strong>Items:</strong> {{ App\Models\Orderitems::where('orders_id', $item->id)->count() }}</p>
+
+                                {{-- order page - order details list --}}
+
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped" border="1" cellpadding="5" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                                <th>Sub Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse (App\Models\Orderitems::where('orders_id', $item->id)->get() as $orderItem)
+                                                <tr>
+                                                    <td>{{ $orderItem->products->name ?? "No Data" }}</td>
+                                                    <td>{{ $orderItem->quantity }}</td>
+                                                    <td>₱ {{ number_format($orderItem->total, 2) }}</td>
+                                                    <td>₱ {{ number_format($orderItem->subtotal, 2) }}</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="4">No Items...</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                {{-- end order page - order details list --}}
+
                                 <p><strong>Status:</strong>
                                     <span class="badge bg-{{ $item->status === 'done' ? 'success' : ($item->status === 'preparing' ? 'danger' : 'secondary') }}">
                                         {{ ucfirst($item->status) }}
@@ -188,12 +220,25 @@
                                 <p><strong>Order Number:</strong> <b class="text-primary">{{ $item->order_number }}</b></p>
                                 <p><strong>Order Type:</strong> <b class="text-primary">{{ $item->types->name ?? "no data" }}</b></p>
                             </div>
-                            <div class="card-footer d-flex">
-                                <a href="{{ route('orders.show', ['ordersId' => $item->id, 'typeId' => $item->order_type]) }}" class="p-1 text-success"><i class="fas fa-eye"></i></a>
+                            <div class="card-footer d-flex gap-2">
+                                <a href="{{ route('orders.show', ['ordersId' => $item->id, 'typeId' => $item->order_type]) }}"
+                                class="btn btn-success btn-md flex-fill py-2" title="View Order">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+
                                 @if ($item->status != 'done')
-                                    <a href="{{ route('orders.edit', ['ordersId' => $item->id, 'typeId' => $item->order_type]) }}" class="p-1 text-info"><i class="fas fa-edit"></i></a>
+                                    <a href="{{ route('orders.edit', ['ordersId' => $item->id, 'typeId' => $item->order_type]) }}"
+                                    class="btn btn-info btn-md flex-fill py-2" title="Edit Order">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
                                 @endif
-                                <a href="{{ route('orders.delete', $item->id) }}" class="p-1 text-danger"><i class="fas fa-trash"></i></a>
+
+                                <a href="{{ route('orders.delete', $item->id) }}"
+                                class="btn btn-danger btn-md flex-fill py-2"
+                                title="Delete Order"
+                                onclick="return confirm('Are you sure you want to delete this order?')">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
                             </div>
                         </div>
                     </div>

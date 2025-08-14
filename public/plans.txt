@@ -5,7 +5,7 @@ ok - (July 26, 2025) - Drinks and Food Type (separated by types)
 
 ok - (July 26, 2025) - Order Search
 
-Kitchen server - on the kitchen view dapat may name sa waiter
+ok Kitchen server - on the kitchen view dapat may name sa waiter
 
 KItchen Box - checked if na tapos na ang Order
 
@@ -30,3 +30,14 @@ database seeder
 pdfer
 
 double check ang mga checkboxes sa builk action...
+
+// aug 14, 2025
+
+1. After click sa order, table number first appear
+2. Recommmendation sa order details
+3. OK - Aug - 14 (justify) terminology on popup alerts and buttons
+4. Click edit, choices of types will apear (food or drinks)
+5. OK - Aug - 14 string yung input type sa table number
+6. OK - Aug - 14 on order list boxes, show details not just number of how many orders
+7. OK - Aug - 14 inventory count like how many beers are consumed this night
+8. OK - Aug - 14 make button larger
